@@ -1,0 +1,44 @@
+#!/bin/sh
+#Apps and other things that won't hurt to re-run
+hsetroot -solid "#000000"
+export GNOME_DESKTOP_SESSION_ID="xmonad"
+wmname LG3D
+killall compiz
+
+#RUNONCES="nm-applet gnome-settings-daemon gnome-do gnome-sound-applet"
+#RUNONCES="nm-applet gnome-settings-daemon gnome-sound-applet kupfer"
+RUNONCES="nm-applet gnome-settings-daemon gnome-panel kupfer"
+
+for APP in $RUNONCES
+do
+	if ps ax | grep -v grep | grep $APP > /dev/null
+then
+	echo ""
+else
+	($APP &)
+fi
+done
+
+if ps ax | grep -v grep | grep xcompmgr > /dev/null
+then
+	echo ""
+else
+	(xcompmgr -n &)
+fi
+
+#if ps ax | grep -v grep | grep trayer > /dev/null
+#then
+#	echo ""
+#else
+#	(trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 15 --transparent true --tint 0xDBDACC --height 20 &)
+#fi
+
+if ps ax | grep -v grep | grep gnome-screensaver > /dev/null
+then
+	echo ""
+else
+	#(gnome-screensaver --no-daemon &)
+	(gnome-screensaver &)
+fi
+
+exec xmonad

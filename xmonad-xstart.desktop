@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Xmonad (with GNOME panel)
+Comment=Lightweight tiling window manager
+#Exec=xmonad
+Exec=/usr/local/bin/xmonad.start
+Icon=xmonad.png
+Type=XSession
