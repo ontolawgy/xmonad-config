@@ -1,0 +1,16 @@
+Config { font = "xft:Ubuntu:weight=bold:size=10:antialias=true"
+       	, bgColor = "black"
+       	, fgColor = "green"
+       	, position = TopW L 98
+	, lowerOnStart = True
+       	, commands = [Run StdinReader, Run CommandReader "sleep 0.5; date +%z" "TZOffset"
+		    , Run CommandReader "sleep 0.5; date +%Z" "TZCode"
+		    , Run Date "%a %Y-%m-%d %T" "date" 10
+                    , Run StdinReader
+		    , Run CommandReader "~/bin/ledmon" "LED"
+                    ]
+       	, sepChar = "%"
+       	, alignSep = "}{"
+       	, template = "%StdinReader% }{|<fc=#ffff00>%LED%</fc>| <fc=#ffA000>%date%%TZOffset%(%TZCode%)</fc>" 
+--       	, template = "%StdinReader% }{<fc=#ffA000>%date%%TZOffset%(%TZCode%)</fc>" 
+       }
