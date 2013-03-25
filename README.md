@@ -1,9 +1,6 @@
 xmonad-config
 =============
 
-<<<<<<< HEAD
-XMonad configuration files, scripts, and instructions for Ubuntu (12.04)
-=======
 XMonad configuration files, scripts, and instructions for Ubuntu (12.04) to use XMonad as a primary desktop with some of the GNOME conveniences underneath (such as working volume control and easy network connection management) 
 
 Simple steps (assuming you have ubuntu and git installed): 
@@ -51,4 +48,3 @@ Notes:
 	then close the window if you don't want to be bothered with the occassional text flashing through it. 
 
 5. I've tried to comment the xmonad.hs file as much as possible where I think that settings or reasons for them aren't necessarily clear. 
->>>>>>> 9e91883
