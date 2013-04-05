@@ -3,8 +3,8 @@ Config { font = "xft:Ubuntu:weight=bold:size=10:antialias=true"
        	, fgColor = "green"
        	, position = TopW L 98
 	, lowerOnStart = True
-       	, commands = [Run StdinReader, Run CommandReader "sleep 0.5; date +%z" "TZOffset"
-		    , Run CommandReader "sleep 0.5; date +%Z" "TZCode"
+       	, commands = [Run StdinReader, Run CommandReader "sleep 0.8; date +%z" "TZOffset"
+		    , Run CommandReader "sleep 0.9; date +%Z" "TZCode"
 		    , Run Date "%a %Y-%m-%d %T" "date" 10
                     , Run StdinReader
 		    , Run CommandReader "~/bin/ledmon" "LED"

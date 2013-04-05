@@ -99,7 +99,7 @@ main = do
 -- <Workspaces>
 
 myWorkspaces = ["`", "1-t", "2-e", "3-§", "4-f", "5-o", "6", "7-$", "8-web", "9-vb", "0", "-", "gimp"] 
---Why 13 workspaces? ` = monitoring apps, both console and GUI; 1 = Terminal; 2 = Email; 3 = Skype and google chat; 4 - file manager; 5 = office applications 6 = spare, often used for reading extra PDFs while writing about them on ws 5 with a PDF and a LibreOffice Writer document open next to it; 7 = spreadsheets; 8 = web browsing; 9 = VirtualBox; 0 = spare; - = spare; gimp = GIMP, with a slightly tweaked custom layout that works well for me (just raise the main image window to master)
+--Why 13 workspaces? ` = monitoring apps, both console and GUI; 1 = Terminal; 2 = Email; 3 = Skype and google chat; 4 - file manager; 5 = office applications 6 = spare, often used for reading extra PDFs while writing about them on ws 5 with a PDF and a LibreOffice Writer document open next to it; 7 = spreadsheets; 8 = web browsing; 9 = VirtualBox; 0 = spare; - = spare; gimp = GIMP, with a slightly tweaked custom layout that works well for me (just remember to raise the main image window to master)
 --
 --myWorkspaces = ["1-t", "2-e", "3-§", "4-f", "5-o", "6", "7-$", "8-web", "9-vb"] 
 
@@ -215,7 +215,7 @@ myKeys =
 --To use extra workspaces as laid out in this configuration, use this codeblock; [key] needs to be in brackets, workspaceKeys needs to be out of them; didn't work the other way around
  	[ (otherModMasks ++ "M-" ++ [key], action tag)
         	| (tag, key)  <- zip myWorkspaces workspaceKeys
-	        , (otherModMasks, action) <- [ ("", windows . W.view) -- or W.greedyView
+	        , (otherModMasks, action) <- [ ("", windows . W.view) -- lets you move focus to the workspace on another monitor without swapping them, which is the default, and quite frustrating if you have different-sized monitors and applications that depend on staying a fixed size, e.g., VirtualBox with Windows inside.
         				     ,  ("S-", windows . W.shift)]
 	]
 	++
