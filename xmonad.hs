@@ -67,15 +67,13 @@ myFocusedBorderColor = "green"  -- "#ff0000" don't use hex, not <24 bit safe
 
 --Main
 main = do
-    xmproc <- spawnPipe "xmobar ~/.xmonad/xmobarrc" --for security, it is a good idea to hard-code ~ to /home/username here; ~ is being used for portability only and is NOT recommended for use in a production environment. Same goes for everywhere else you see ~
-    --xmonad $ ewmh $ withUrgencyHook NoUrgencyHook $ gnomeConfig 
-    xmonad $ withUrgencyHook NoUrgencyHook $ gnomeConfig 
+    xmproc <- spawnPipe "xmobar ~/.xmonad/xmobarrc" --for security, it is a good idea to hard-code ~ to /home/username here; ~ is being used for portability only and is NOT recommended for use in a production environment; same goes for everywhere you see ~
+    xmonad $ ewmh $ withUrgencyHook NoUrgencyHook $ gnomeConfig -- necessary to keep LibreOffice menus working
 	{ workspaces = myWorkspaces
 	, terminal = myTerminal
 	, borderWidth        = myBorderWidth
 	, normalBorderColor  = myNormalBorderColor
     	, focusedBorderColor = myFocusedBorderColor
-	--, manageHook = myManageHook <+> manageHook defaultConfig
 	, manageHook = myManageHook <+> manageHook gnomeConfig
 	, layoutHook = avoidStruts $ myLayout
 	, startupHook = setWMName "LG3D" -- required to get some Java GUI applications running properly
@@ -97,12 +95,13 @@ main = do
 
 -- <Variables>
 
+
 -- <Workspaces>
 
 myWorkspaces = ["`", "1-t", "2-e", "3-§", "4-f", "5-o", "6", "7-$", "8-web", "9-vb", "0", "-", "gimp"] 
---Why 13 workspaces? ` = monitoring apps, both console and GUI; 1 = Terminal; 2 = Email; 3 = Skype and google chat; 4 - file manager; 5 = office applications 6 = spare, often used for reading extra PDFs while writing about them on workspace 5 with a PDF and a LibreOffice Writer document open next to it; 7 = spreadsheets; 8 = web browsing; 9 = VirtualBox; 0 = spare; - = spare; gimp = GIMP, with a slightly tweaked custom layout that works well for me (just raise the main image window to master)
+--Why 13 workspaces? ` = monitoring apps, both console and GUI; 1 = Terminal; 2 = Email; 3 = Skype and google chat; 4 - file manager; 5 = office applications 6 = spare, often used for reading extra PDFs while writing about them on ws 5 with a PDF and a LibreOffice Writer document open next to it; 7 = spreadsheets; 8 = web browsing; 9 = VirtualBox; 0 = spare; - = spare; gimp = GIMP, with a slightly tweaked custom layout that works well for me (just raise the main image window to master)
 --
---myWorkspaces = ["1-t", "2-e", "3-§", "4-f", "5-o", "6", "7-$", "8-web", "9-vb"] -- default 9 workspaces with quick notes about what they're for
+--myWorkspaces = ["1-t", "2-e", "3-§", "4-f", "5-o", "6", "7-$", "8-web", "9-vb"] 
 
 -- <Default applications>
 
@@ -154,9 +153,10 @@ myLayout = 	onWorkspace "9-vb" simpleTabbed $
 -- <Automatic application and window actions>
 
 myManageHook = composeAll . concat $
- 	[ [isDialog --> doFloat] -- This allows you to move things like modal dialogs, file open/save windows so you can peek underneath if you need to
+ 	[ [isDialog --> doFloat] -- This allows you to move things like modal dialogs, file open/save windows so you can peek underneath if you need to.
 	, [className =? "Firefox" --> doShift "8-web"
- 	, appName =? "google-chrome" --> doShift "8-web"
+ 	--, appName =? "google-chrome" --> doShift "8-web"
+ 	, className =? "google-chrome" --> doShift "8-web"
 	, className =? "Xmessage" --> doCenterFloat
 	, className =? "Do"	--> doCenterFloat
 	, className =? "Kupfer"	--> doCenterFloat
@@ -170,19 +170,24 @@ myManageHook = composeAll . concat $
 
 -- <Keys>
 
+--myKeys :: [([Char], X ())] -- use this if you want to use the default workspaces 1-9 
 myKeys :: [(String, X ())] -- this is needed to get functioning workspace switching keys for extended workspaces using the keys set below
 myKeys =
-	[ ("<Print>", spawn "sleep 0.2; sh ~/bin/scs &")  --This is a small shell script to use scrot to take screenshots into /run/shm named with the date and time of the picture. For security, it is a good idea to hard-code ~ to /home/username here; ~ is being used for portability only and is NOT recommended for use in a production environment
-	, ("M-S-q", spawn "xmessage 'Use Ctrl-Mod-Shift-q to exit.'") --This is the default keybinding to kill XMonad, and it is easy to hit by accident, with sometimes disastrous results. I have unmapped it here to help prevent unintentional exits. XMonad is a bit abrupt on exiting and will dump you to the display manager without asking you to save anything.
+	[ ("<Print>", spawn "sleep 0.2; sh ~/bin/scs &")  ----This is a small shell script to use scrot to take screenshots into /run/shm named with the date and time of the picture. For security, it is a good idea to hard-code ~ to /home/username here; ~ is being used for portability only and is NOT recommended for use in a production environment	
+, ("M-S-q", spawn "xmessage 'Use Ctrl-Mod-Shift-q to exit.'") --This is the default keybinding to kill XMonad, and it is easy to hit by accident, with sometimes disastrous results. I have unmapped it here to help prevent unintentional exits. XMonad is a bit abrupt on exiting and will dump you to the display manager without asking you to save anything.
 	, ("M-C-S-q", io (exitWith ExitSuccess)) --In more than a year of using XMonad as my only desktop, I have never exited by accident with the key combination set to this; just try hitting 4 keys by accident.
-	, ("M-q", spawn "xmonad --recompile; xmessage 'XMonad recompiled'") --Unmaps M-q from recompile and restart to prevent XMo from restarting after a failed recompile
+	, ("M-q", spawn "xmonad --recompile; xmessage 'XMonad recompiled'") --This unmaps M-q from recompile and restart to prevent XMo from restarting after a failed recompile
 	, ("M-C-r", spawn "xmonad --restart")
 	, ("M-a", warpToCenter >> goToSelected (myGSConfig defaultColorizer) )
 	, ("M-x", windowMenu)
-	, ("M-<L>", prevWS) --change view to previous workspace
-	, ("M-S-<L>", shiftToPrev) --Move client to previous workspace
-	, ("M-<R>", nextWS) --change view to next workspace
-	, ("M-S-<R>", shiftToNext) --Move client to next workspace
+	--change view to previous workspace
+	, ("M-<L>", prevWS)
+	--Move client to previous workspace
+	, ("M-S-<L>", shiftToPrev)
+	--change view to next workspace
+	, ("M-<R>", nextWS)
+	--Move client to next workspace
+	, ("M-S-<R>", shiftToNext)
 	, ("M-p", runOrRaisePrompt myXPConfig 
 			{position = Top
 			})
@@ -193,16 +198,32 @@ myKeys =
 	, ("M-S-<Return>", windows W.shiftMaster) --per xmonad-contrib-0.10 README to move current window to master in current workspace to be more consistent with workspace shifting commands
 	]
 	++
+--No idea where the following came from, but it is the most reliable way for me to get non-greedy views with multiple monitors. Use this code block for the default workspaces (1-9) and workspace keybindings (again, 1-9) only
+-- 	[ (otherModMasks ++ "M-" ++ key, action tag)
+--        	| (tag, key)  <- zip myWorkspaces (map (\x -> show x ) [1..9])
+--	        , (otherModMasks, action) <- [ ("", windows . W.view) -- or W.greedyView
+--        				     ,  ("S-", windows . W.shift)]
+--	]
+--	++
+-- 	[ (otherModMasks ++ "M-C-" ++ key, action tag)
+--        	| (tag, key)  <- zip myWorkspaces (map (\x -> show x ) [1..9])
+--	        , (otherModMasks, action) <- [ ("", windows . W.greedyView) -- or W.view for non-greedy
+--        				     ,  ("S-", windows . W.shift)]
+--	]
+-- end default workspace codeblock
+
 --To use extra workspaces as laid out in this configuration, use this codeblock; [key] needs to be in brackets, workspaceKeys needs to be out of them; didn't work the other way around
  	[ (otherModMasks ++ "M-" ++ [key], action tag)
         	| (tag, key)  <- zip myWorkspaces workspaceKeys
-	        , (otherModMasks, action) <- [ ("", windows . W.view) -- lets you move focus to the workspace on the other monitor without swapping them
+	        , (otherModMasks, action) <- [ ("", windows . W.view) -- or W.greedyView
         				     ,  ("S-", windows . W.shift)]
 	]
 	++
  	[ (otherModMasks ++ "M-C-" ++ [key], action tag)
         	| (tag, key)  <- zip myWorkspaces workspaceKeys
-	        , (otherModMasks, action) <- [ ("", windows . W.greedyView) -- instead of switching focus to the visible workspace on another monitor, this swaps workspaces between monitors, which is the default behavior, and which I found maddening when using VirtualBox with Windows on a large external monitor, and would frequently unintentionally shift it to my laptop, which would resize all the windows inside.
-        				     ,  ("S-", windows . W.shift)] --the intention is something like a "greedy shift", but it doesn't seem to work for me; just M-S-#, then M-C-#; again, something for a perfectionist to try to fix
+	        , (otherModMasks, action) <- [ ("", windows . W.greedyView) -- or W.view for non-greedy
+        				     ,  ("S-", windows . W.shift)] --the intention is something like a "greedy shift", but it doesn't seem to work for me; just M-S-#, then M-C-#
 	]
 	where workspaceKeys = "`1234567890-=" --these are the literal keys; = goes to the gimp workspace; change to "123456789" to get default keybindings back, but make sure you only have 9 workspaces declared or you won't have a very easy way to get to them all 
+--end extra workspace codeblock
+
