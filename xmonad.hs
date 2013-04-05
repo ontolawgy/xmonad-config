@@ -174,7 +174,7 @@ myManageHook = composeAll . concat $
 myKeys :: [(String, X ())] -- this is needed to get functioning workspace switching keys for extended workspaces using the keys set below
 myKeys =
 	[ ("<Print>", spawn "sleep 0.2; sh ~/bin/scs &")  ----This is a small shell script to use scrot to take screenshots into /run/shm named with the date and time of the picture. For security, it is a good idea to hard-code ~ to /home/username here; ~ is being used for portability only and is NOT recommended for use in a production environment	
-, ("M-S-q", spawn "xmessage 'Use Ctrl-Mod-Shift-q to exit.'") --This is the default keybinding to kill XMonad, and it is easy to hit by accident, with sometimes disastrous results. I have unmapped it here to help prevent unintentional exits. XMonad is a bit abrupt on exiting and will dump you to the display manager without asking you to save anything.
+	, ("M-S-q", spawn "xmessage 'Use Ctrl-Mod-Shift-q to exit.'") --This is the default keybinding to kill XMonad, and it is easy to hit by accident, with sometimes disastrous results. I have unmapped it here to help prevent unintentional exits. XMonad is a bit abrupt on exiting and will dump you to the display manager without asking you to save anything.
 	, ("M-C-S-q", io (exitWith ExitSuccess)) --In more than a year of using XMonad as my only desktop, I have never exited by accident with the key combination set to this; just try hitting 4 keys by accident.
 	, ("M-q", spawn "xmonad --recompile; xmessage 'XMonad recompiled'") --This unmaps M-q from recompile and restart to prevent XMo from restarting after a failed recompile
 	, ("M-C-r", spawn "xmonad --restart")
