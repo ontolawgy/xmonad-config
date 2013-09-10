@@ -89,7 +89,7 @@ main = do
 		-- uncomment the following line to show ids for workspaces with no windows
 		--, ppHiddenNoWindows = xmobarColor "grey" "" . wrap "| " " |"
 		, ppLayout = const "" -- disables layout info on xmobar; comment to show layout names
-                }
+                } >> setWMName "LG3D" -- required if you use ewmh
 	, modMask = XMonad.mod4Mask --Rebind Mod to Windows key
 	} `additionalKeysP` myKeys 
 
